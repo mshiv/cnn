@@ -17,10 +17,6 @@ import re
 
 import matplotlib.pyplot as plt
 
-#because openCV (cv2) doesn't seem to load without this
-import sys
-sys.path.append('/usr/local/lib/python2.7/site-packages')
-
 import cv2
 from imageflow import convert_images
 #-------------------------------------------------
@@ -28,137 +24,6 @@ from imageflow import convert_images
 print "Locating dataset..."
 #Read images into arrays
 #Sat images = Input data
-
-#for data_type in ['train', 'test', 'valid']:
-'''
-mypath='data/train/sat'# % data_type
-onlyfiles = [ f for f in listdir(mypath) if isfile(join(mypath,f)) ]
-sat_images = np.empty(len(onlyfiles), dtype=object)
-for n in range(0, len(onlyfiles)):
-  sat_images[n] = cv2.imread( join(mypath,onlyfiles[n]) )
-
-print sat_images[1].shape
-
-plt.figure(1)
-for i in range(1, len(onlyfiles)+1):
-	plt.subplot(2,7,i)
-	sat_plot = plt.imshow(sat_images[i-1])
-
-	
-#map images = Labels (class SCORES)
-
-#for data_type in ['train', 'test', 'valid']:
-mypath='data/train/map'
-onlyfilesm = [ f for f in listdir(mypath) if isfile(join(mypath,f)) ]
-map_images = np.empty(len(onlyfilesm), dtype=object)
-for n in range(0, len(onlyfilesm)):
-  map_images[n] = cv2.imread(join(mypath,onlyfilesm[n]) )
-
-print map_images.shape
-
-plt.figure(2)
-for i in range(1, len(onlyfilesm)+1):
-	plt.subplot(2,7,i)
-	map_plot = plt.imshow(map_images[i-1])
-
-#Get file name ID of samples/labels in dataset
-bldg_fns = glob.glob('data/train/map/*.tif')
-#bldg_fns += glob.glob('data/test/map/*/tif')
-#bldg_fns += glob.glob('data/valid/map/*.tif')
-
-def get_ids(fns):
-	return [re.search('/([0-9]+_[0-9]+)', fn).groups()[0] for fn in fns]
-
-bldg_fns = get_ids(bldg_fns)
-print bldg_fns
-
-plt.show()
-
-
-mypath='/media/shiva/01D13028CF132AE0/SpaceMaster/Semester 4 - Prague/Thesis/Datasets/mass_roads/test/sat'# % data_type
-onlyfiles = [ f for f in listdir(mypath) if isfile(join(mypath,f)) ]
-sat_imagesl = np.empty(len(onlyfiles), dtype = object)
-for n in range(0, len(onlyfiles)):
-  sat_imagesl[n] = cv2.imread( join(mypath,onlyfiles[n]) )
-  print ("reading test satellite image: %d of %d" % (n+1, len(onlyfiles)))
-
-#print sat_imagesl[1].shape
-
-print ("Plotting test satellite images...")
-plt.figure(1)
-
-for i in range(1, len(onlyfiles)+1):
-	plt.subplot(7,7,i)
-	sat_plot = plt.imshow(sat_imagesl[i-1])
-	print ("Plotting image %d of %d" % (i, len(onlyfiles)))
-
-
-def read_data_sets():
-	# Satellite image inputs for testing
-	mypath='/media/shiva/01D13028CF132AE0/SpaceMaster/Sem4_Prague/Thesis/Datasets/mass_roads_batch/test/sat'# % data_type
-	if os.path.exists(mypath):
-		print "Found datasets \n Loading files..."
-	else:
-		print "Data not found!"
-	onlyfiles = [ f for f in listdir(mypath) if isfile(join(mypath,f))]
-
-	sat_images_test = np.empty([len(onlyfiles),1500,1500,3])
-	for n in range(0, len(onlyfiles)):
-		sat_images_test[n] = cv2.imread(join(mypath, onlyfiles[n]))
-		print ("reading test satellite image: %d of %d" % (n+1, len(onlyfiles)))
-		#sat_images.reshape([len(onlyfiles), sat_images[n].shape[0],sat_images[n].shape[1],sat_images[n].shape[2]])
-
-	#print ("Plotting test satellite images...")
-	#plt.figure(1)
-
-	#for i in range(1, len(onlyfiles)+1):
-	#	plt.subplot(7,7,i)
-	#	sat_plot = plt.imshow(sat_images[i-1])
-	#	print ("Plotting image %d of %d" % (i, len(onlyfiles)))
-
-	#plt.show()
-	
-	# Satellite image MAPS (Labels) for testing
-	mypath='/media/shiva/01D13028CF132AE0/SpaceMaster/Sem4_Prague/Thesis/Datasets/mass_roads_batch/test/map'# % data_type
-	if os.path.exists(mypath):
-		print "Found datasets \n Loading files..."
-	else:
-		print "Data not found!"
-	onlyfiles = [ f for f in listdir(mypath) if isfile(join(mypath,f))]
-	map_images_test = np.empty([len(onlyfiles),1500,1500,3])
-	for n in range(0, len(onlyfiles)):
-		map_images_test[n] = cv2.imread(join(mypath, onlyfiles[n]))
-		print ("reading test satellite map: %d of %d" % (n+1, len(onlyfiles)))
-
-	# Satellite image inputs for training
-	mypath='/media/shiva/01D13028CF132AE0/SpaceMaster/Sem4_Prague/Thesis/Datasets/mass_roads_batch/train/sat'# % data_type
-	if os.path.exists(mypath):
-		print "Found datasets \n Loading files..."
-	else:
-		print "Data not found!"
-	onlyfiles = [ f for f in listdir(mypath) if isfile(join(mypath,f))]
-	sat_images_train = np.empty([len(onlyfiles),1500,1500,3])
-	for n in range(0, len(onlyfiles)):
-		sat_images_train[n] = cv2.imread(join(mypath, onlyfiles[n]))
-		print ("reading training satellite image: %d of %d" % (n+1, len(onlyfiles)))
-		#sat_images.reshape([len(onlyfiles), sat_images[n].shape[0],sat_images[n].shape[1],sat_images[n].shape[2]])
-	
-	# Satellite image MAPS (Labels) for training
-	mypath='/media/shiva/01D13028CF132AE0/SpaceMaster/Sem4_Prague/Thesis/Datasets/mass_roads_batch/train/map'# % data_type
-	if os.path.exists(mypath):
-		print "Found datasets \n Loading files..."
-	else:
-		print "Data not found!"
-	onlyfiles = [ f for f in listdir(mypath) if isfile(join(mypath,f))]
-	map_images_train = np.empty([len(onlyfiles),1500,1500,3])
-	for n in range(0, len(onlyfiles)):
-		map_images_train[n] = cv2.imread(join(mypath, onlyfiles[n]))
-		print ("reading training satellite image: %d of %d" % (n+1, len(onlyfiles)))
-
-	return sat_images_train, sat_images_test, map_images_train, map_images_test
-
-'''
-
 
 class DataSet(object):
   
@@ -232,7 +97,7 @@ def read_data_sets():
     pass
   data_sets = DataSets()
   # Satellite image inputs for testing
-  mypath='/media/shiva/01D13028CF132AE0/SpaceMaster/Sem4_Prague/Thesis/Datasets/mass_roads_batch/test/sat'# % data_type
+  mypath='mass_roads_batch/test/sat'# %data_type (when looped - change)
   if os.path.exists(mypath):
   	print "Found datasets \n Loading files..."
   else:
@@ -245,7 +110,7 @@ def read_data_sets():
   	#sat_images.reshape([len(onlyfiles), sat_images[n].shape[0],sat_images[n].shape[1],sat_images[n].shape[2]])
 
   # Satellite image MAPS (Labels) for testing
-  mypath='/media/shiva/01D13028CF132AE0/SpaceMaster/Sem4_Prague/Thesis/Datasets/mass_roads_batch/test/map'# % data_type
+  mypath='mass_roads_batch/test/map'# % data_type
   if os.path.exists(mypath):
   	print "Found datasets \n Loading files..."
   else:
@@ -257,7 +122,7 @@ def read_data_sets():
   	print ("reading test satellite map: %d of %d" % (n+1, len(onlyfiles)))
 
   # Satellite image inputs for training
-  mypath='/media/shiva/01D13028CF132AE0/SpaceMaster/Sem4_Prague/Thesis/Datasets/mass_roads_batch/train/sat'# % data_type
+  mypath='mass_roads_batch/train/sat'# % data_type
   if os.path.exists(mypath):
   	print "Found datasets \n Loading files..."
   else:
@@ -270,7 +135,7 @@ def read_data_sets():
 	#sat_images.reshape([len(onlyfiles), sat_images[n].shape[0],sat_images[n].shape[1],sat_images[n].shape[2]])
 	
   # Satellite image MAPS (Labels) for training
-  mypath='/media/shiva/01D13028CF132AE0/SpaceMaster/Sem4_Prague/Thesis/Datasets/mass_roads_batch/train/map'# % data_type
+  mypath='mass_roads_batch/train/map'# % data_type
   if os.path.exists(mypath):
 	print "Found datasets \n Loading files..."
   else:
@@ -291,54 +156,53 @@ def read_data_sets():
   
   return data_sets
 
-'''
-
-def read_data_sets():
-  class DataSets(object):
-    pass
-  data_sets = DataSets()
-  # Satellite image inputs for testing
-
-  for data in ['test, train']:
-    mypath='/media/shiva/01D13028CF132AE0/SpaceMaster/Sem4_Prague/Thesis/Datasets/mass_roads_batch/%s/sat' %data# % data_type
-    if os.path.exists(mypath):
-  	  print "Found datasets \n Loading files..."
-    else:
-	  print "Data not found!"
-    onlyfiles = [ f for f in listdir(mypath) if isfile(join(mypath,f))]
-    sat_images_test = np.empty([len(onlyfiles),1500,1500,3])
-    for n in range(0, len(onlyfiles)):
-    	sat_images_test[n] = cv2.imread(join(mypath, onlyfiles[n]))
-    	print ("reading test satellite image: %d of %d" % (n+1, len(onlyfiles)))
-  	  #sat_images.reshape([len(onlyfiles), sat_images[n].shape[0],sat_images[n].shape[1],sat_images[n].shape[2]])
-
-  # Satellite image MAPS (Labels) for testing
-    mypath='/media/shiva/01D13028CF132AE0/SpaceMaster/Sem4_Prague/Thesis/Datasets/mass_roads_batch/%s/map' %data# % data_type
-    if os.path.exists(mypath):
-    	print "Found datasets \n Loading files..."
-    else:
-    	print "Data not found!"
-    onlyfiles = [ f for f in listdir(mypath) if isfile(join(mypath,f))]
-    map_images_test = np.empty([len(onlyfiles),1500,1500,3])
-    for n in range(0, len(onlyfiles)):
-    	map_images_test[n] = cv2.imread(join(mypath, onlyfiles[n]))
-    	print ("reading test satellite map: %d of %d" % (n+1, len(onlyfiles)))
-  
-  #train_images = sat_images_train
-  #train_labels = map_images_train
-  test_images = sat_images_test
-  test_labels = map_images_test
-
-  #data_sets.train = DataSet(train_images, train_labels)
-  data_sets.test = DataSet(test_images, test_labels)
-  
-  return data_sets
-
-read_data_sets()
 
 '''
+mypath='data/train/sat'# % data_type
+onlyfiles = [ f for f in listdir(mypath) if isfile(join(mypath,f)) ]
+sat_images = np.empty(len(onlyfiles), dtype=object)
+for n in range(0, len(onlyfiles)):
+  sat_images[n] = cv2.imread( join(mypath,onlyfiles[n]) )
 
-#read_data_sets()
+print sat_images[1].shape
+
+plt.figure(1)
+for i in range(1, len(onlyfiles)+1):
+	plt.subplot(2,7,i)
+	sat_plot = plt.imshow(sat_images[i-1])
+
+	
+#map images = Labels (class scores)
+
+#for data_type in ['train', 'test', 'valid']:
+mypath='data/train/map'
+onlyfilesm = [ f for f in listdir(mypath) if isfile(join(mypath,f)) ]
+map_images = np.empty(len(onlyfilesm), dtype=object)
+for n in range(0, len(onlyfilesm)):
+  map_images[n] = cv2.imread(join(mypath,onlyfilesm[n]) )
+
+print map_images.shape
+
+plt.figure(2)
+for i in range(1, len(onlyfilesm)+1):
+	plt.subplot(2,7,i)
+	map_plot = plt.imshow(map_images[i-1])
+
+#Get file name ID of samples/labels in dataset
+bldg_fns = glob.glob('data/train/map/*.tif')
+#bldg_fns += glob.glob('data/test/map/*/tif')
+#bldg_fns += glob.glob('data/valid/map/*.tif')
+
+def get_ids(fns):
+	return [re.search('/([0-9]+_[0-9]+)', fn).groups()[0] for fn in fns]
+
+bldg_fns = get_ids(bldg_fns)
+print bldg_fns
+
+plt.show()
+'''
+
+
 
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------
 #print sat_images[0].shape[0]
